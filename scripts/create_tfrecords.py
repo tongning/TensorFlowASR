@@ -17,7 +17,7 @@ import argparse
 from tensorflow_asr.configs.config import Config
 from tensorflow_asr.utils.utils import preprocess_paths
 from tensorflow_asr.datasets.asr_dataset import ASRTFRecordDataset
-from tensorflow_asr.featurizers.text_featurizers import SubwordFeaturizer, SentencePieceFeaturizer
+from tensorflow_asr.featurizers.text_featurizers import SubwordFeaturizer, SentencePieceFeaturizer, CharFeaturizer
 
 parser = argparse.ArgumentParser(prog="TFRecords Creation")
 
@@ -50,6 +50,9 @@ if args.sentence_piece:
 elif args.subwords and os.path.exists(args.subwords):
     print("Loading subwords ...")
     text_featurizer = SubwordFeaturizer.load_from_file(config.decoder_config, args.subwords)
+else:
+    print("Using character featurizer ...")
+    text_featurizer = CharFeaturizer(config.decoder_config)
 
 ASRTFRecordDataset(
     data_paths=transcripts, tfrecords_dir=tfrecords_dir,
