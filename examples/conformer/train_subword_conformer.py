@@ -46,6 +46,8 @@ parser.add_argument("--subwords", type=str, default=None, help="Path to file tha
 
 parser.add_argument("--subwords_corpus", nargs="*", type=str, default=[], help="Transcript files for generating subwords")
 
+parser.add_argument("--pretrained_model", type=str, default=None, help="File path for pretrained model checkpoint.")
+
 args = parser.parse_args()
 
 tf.config.optimizer.set_experimental_options({"auto_mixed_precision": args.mxp})
@@ -103,9 +105,18 @@ conformer_trainer = TransducerTrainer(
 
 with conformer_trainer.strategy.scope():
     # build model
-    conformer = Conformer(**config.model_config, vocabulary_size=text_featurizer.num_classes)
-    conformer._build(speech_featurizer.shape)
-    conformer.summary(line_length=120)
+    if args.pretrained_model is None:
+        print("Training from scratch...")
+        conformer = Conformer(**config.model_config, vocabulary_size=text_featurizer.num_classes)
+        conformer._build(speech_featurizer.shape)
+        conformer.summary(line_length=120)
+    else:
+        print("Training from provided checkpoint...")
+        conformer = Conformer(**config.model_config, vocabulary_size=text_featurizer.num_classes)
+        conformer._build(speech_featurizer.shape)
+        conformer.load_weights(args.pretrained_model)
+        conformer.summary(line_length=120)
+        conformer.add_featurizers(speech_featurizer, text_featurizer) # TODO: Do we need this?
 
     optimizer = tf.keras.optimizers.Adam(
         TransformerSchedule(

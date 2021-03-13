@@ -51,7 +51,7 @@ from tensorflow_asr.runners.base_runners import BaseTester
 from tensorflow_asr.models.jasper import Jasper
 
 tf.random.set_seed(0)
-assert args.export
+#assert args.export
 
 config = Config(args.config)
 speech_featurizer = TFSpeechFeaturizer(config.speech_config)
