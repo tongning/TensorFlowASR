@@ -117,9 +117,9 @@ learning_config:
     accumulation_steps: 4
     num_epochs: 10
     outdir: ./output/conformer
-    log_interval_steps: 300
-    eval_interval_steps: 500
-    save_interval_steps: 1000
+    log_interval_steps: 5000
+    eval_interval_steps: 5000
+    save_interval_steps: 5000
     checkpoint:
       filepath: ./output/conformer/checkpoints/{epoch:02d}.h5
       save_best_only: True
