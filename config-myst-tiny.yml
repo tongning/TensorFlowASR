@@ -28,7 +28,7 @@ decoder_config:
   target_vocab_size: 4096
   max_subword_length: 4
   blank_at_zero: True
-  beam_width: 5
+  beam_width: 0
   norm_score: True
   corpus_files:
     - /mnt/data/tfasr_manifests/train_tiny.tsv
